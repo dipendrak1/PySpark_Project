@@ -1,6 +1,6 @@
 import pytest
 from pyspark.sql import SparkSession
-from main import rename_column, add_literal_string_column, read_csv_file_with_headers
+from main import rename_column, add_literal_string_column, read_csv_file_with_headers, filter_out_null_values
 
 
 @pytest.fixture(scope="session")
@@ -62,3 +62,22 @@ def test_read_csv_file_with_headers(spark):
     expected_df = spark.createDataFrame(data, cols)
     assert test_df.columns == expected_df.columns
     assert (expected_df.subtract(test_df)).count() == 0
+
+
+def test_filter_out_null_values(spark):
+    data = [(1, 'name_1'),
+            (2, 'name_2'),
+            (3, 'name_3'),
+            (4, 'name_4'),
+            (5, None)
+            ]
+    example_df = spark.createDataFrame(data, ["id", "name"])
+
+    data = [(1, 'name_1'),
+            (2, 'name_2'),
+            (3, 'name_3'),
+            (4, 'name_4')
+            ]
+    expected_df = spark.createDataFrame(data, ["id", "name"])
+    returned_df = filter_out_null_values(example_df, 'name')
+    assert (expected_df.subtract(returned_df)).count() == 0
