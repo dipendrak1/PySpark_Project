@@ -61,8 +61,7 @@ def test_read_csv_file_with_headers(spark):
             ]
     cols = ["id", "name"]
     expected_df = spark.createDataFrame(data, cols)
-    assert test_df.columns == expected_df.columns
-    assert (expected_df.subtract(test_df)).count() == 0
+    assert sorted(expected_df.collect()) == sorted(test_df.collect())
 
 
 def test_filter_out_null_values(spark):
@@ -81,4 +80,4 @@ def test_filter_out_null_values(spark):
             ]
     expected_df = spark.createDataFrame(data, ["id", "name"])
     returned_df = filter_out_null_values(example_df, 'name')
-    assert (expected_df.subtract(returned_df)).count() == 0
+    assert sorted(expected_df.collect()) == sorted(returned_df.collect())
