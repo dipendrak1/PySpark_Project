@@ -1,6 +1,7 @@
 import pytest
 from pyspark.sql import SparkSession
-from main import rename_column, add_literal_string_column, read_csv_file_with_headers, filter_out_null_values
+from main import rename_column, add_literal_string_column, \
+                read_csv_file_with_headers, filter_out_null_values
 
 
 @pytest.fixture(scope="session")
